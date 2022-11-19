@@ -1,0 +1,8 @@
+Install Awesome
+Install Nitrogen
+Install Firefox
+Install Alacritty
+Install Neofetch
+Install Cmatrix
+Setup bluetooths
+WALLPAPER
