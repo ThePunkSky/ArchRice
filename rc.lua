@@ -45,7 +45,7 @@ end
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
-beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
+beautiful.init("~/.config/awesome/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
 terminal = "alacritty	"
@@ -61,17 +61,18 @@ modkey = "Mod4"
 
 -- Table of layouts to cover with awful.layout.inc, order matters.
 awful.layout.layouts = {
-    --awful.layout.suit.floating,
+
     awful.layout.suit.tile,
     awful.layout.suit.tile.left,
     awful.layout.suit.tile.bottom,
     awful.layout.suit.tile.top,
+    awful.layout.suit.floating, 
+    awful.layout.suit.max.fullscreen,
     --awful.layout.suit.fair,
     --awful.layout.suit.fair.horizontal,
     --awful.layout.suit.spiral,
     --awful.layout.suit.spiral.dwindle,
     --awful.layout.suit.max,
-    --awful.layout.suit.max.fullscreen,
     --awful.layout.suit.magnifier,
     --awful.layout.suit.corner.nw,
     -- awful.layout.suit.corner.ne,
@@ -162,14 +163,18 @@ local function set_wallpaper(s)
 end
 
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
-screen.connect_signal("property::geometry", set_wallpaper)
+--screen.connect_signal("property::geometry", set_wallpaper)
 
 awful.screen.connect_for_each_screen(function(s)
     -- Wallpaper
-    set_wallpaper(s)
+    --set_wallpaper(s)
 
     -- Each screen has its own tag table.
     awful.tag({ "1: Terminals", "2: Firefox", "3: Youtube", "4: Development", "5: Discord", "6: Music", "7: Random", "8: Fullscreen", "9: Pretty" }, s, awful.layout.layouts[1])
+
+    --local names ={ "1: Terminals", "2: Firefox", "3: Youtube", "4: Development", "5: Discord", "6: Music", "7: Random", "8: Fullscreen", "9: Pretty" }, s, awful.layout.layouts[1]
+    --local l = awful.layout.suit
+    --local layouts = {l.tile,l.tile,l.fullscreen,l.fullscreen,l.fullscreen,l.fullscreen,l.floating,l.fullscreen,l.tile}
 
     -- Create a promptbox for each screen
     s.mypromptbox = awful.widget.prompt()
@@ -309,26 +314,22 @@ awful.screen.connect_for_each_screen(function(s)
                                          end
                                      end,
                                      {description = "restore minimized", group = "client"}),
-                       
-                           -- Dmenu
-                           awful.key({ modkey },            "r",     function () 
-                               awful.util.spawn("dmenu_run") end,
-                               {description = "run dmenu", group = "launcher"}),
-                       
-                       
-                               -- Firefox
-                           awful.key({ modkey },            "b",     function () 
-                               awful.util.spawn("firefox") end,
-                               {description = "Firefox", group = "applications"}),
-                           
-                           
-                               -- Visual Studio Code
-                           awful.key({ modkey },            "c",     function () 
-                               awful.util.spawn("code") end,
-                               {description = "Visual Studio Code", group = "applications"}),
-                       
-                       
-                       
+                                            -- Dmenu
+                                            awful.key({ modkey },       "r",     function () 
+                                            awful.util.spawn("dmenu_run") end,
+                                            {description = "run dmenu", group = "launcher"}),
+                                        
+                                            -- Firefox
+                                            awful.key({ modkey },       "b",     function ()
+                                            awful.util.spawn("firefox") end, 
+                                            {description = "Firefox", group = "applications"}),
+                                        
+                                            -- JetBrains-Toolbox
+                                            awful.key({ modkey },       "c",       function () 
+                                            awful.util.spawn("jetbrains-toolbox") end,
+                                            {description = "JetBrains Toolbox", group = "applications"}),
+                                    
+
                            awful.key({ modkey }, "x",
                                      function ()
                                          awful.prompt.run {
@@ -461,15 +462,18 @@ awful.screen.connect_for_each_screen(function(s)
                        awful.rules.rules = {
                            -- All clients will match this rule.
                            { rule = { },
-                             properties = { border_width = beautiful.border_width,
-                                            border_color = beautiful.border_normal,
+                             properties = {-- border_width = beautiful.border_width,
+                                            --border_color = beautiful.border_normal,
                                             focus = awful.client.focus.filter,
                                             raise = true,
                                             keys = clientkeys,
                                             buttons = clientbuttons,
                                             screen = awful.screen.preferred,
-                                            placement = awful.placement.no_overlap+awful.placement.no_offscreen
-                            }
+                                	    placement = awful.placement.no_overlap+awful.placement.no_offscreen
+					    
+
+                        	}
+
                            },
                        
                            -- Floating clients.
@@ -478,6 +482,8 @@ awful.screen.connect_for_each_screen(function(s)
                                  "DTA",  --  addon DownThemAll.
                                  "copyq",  -- Includes session name in class.
                                  "pinentry",
+				 "bitwarden",
+
                                },
                                class = {
                                  "Arandr",
@@ -505,7 +511,7 @@ awful.screen.connect_for_each_screen(function(s)
                        
                            -- Add titlebars to normal clients and dialogs
                            { rule_any = {type = { "normal", "dialog" }
-                             }, properties = { titlebars_enabled = true }
+                             }, properties = { titlebars_enabled = false }
                            },
                        
                            -- Set Firefox to always map on the tag named "2" on screen 1.
@@ -582,11 +588,28 @@ awful.screen.connect_for_each_screen(function(s)
                        
                        --Autostart Programs
                        
-                       awful.spawn.with_shell("compton")
-                       --awful.spawn.with_shell(".screenlayout/foo.sh")
-                       awful.spawn.with_shell('sudo nmcli dev wifi connect "Wearenamingthewificarlagain" password "QuigleyHouse"')
+                       
+		       awful.spawn.with_shell("compton")
+                       awful.spawn.with_shell("/home/sky/.screenlayout/foo.sh")
+                       awful.spawn.with_shell('nmcli r wifi | sudo nmcli dev wifi connect "Wearenamingthewificarlagain" password "QuigleyHouse"')
                        awful.spawn.with_shell("nitrogen --restore")
+		       --awful.spawn.with_shell("awesome-setup")
 
+
+
+
+                       --Beautiful cfg
+                       beautiful.useless_gap = 5
+
+                       
+                       
+                       
+                       
+                       
+                       
+                       --Custom KeyBinds 
+      
+                         
 
 
 
